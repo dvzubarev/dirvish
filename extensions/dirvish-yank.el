@@ -67,6 +67,14 @@ The value can be a symbol or a function that returns a fileset."
   "The default options for the rsync command."
   :type 'list :group 'dirvish)
 
+(defcustom dirvish-yank-rsync-discard-prefix-when-relative t
+  "Don't create directories from common prefix on the receiver side.
+It works only when --relative option is passed to rsync.
+For example, if you send files /foo/bar/temp1 and /foo/baz/temp2,
+on the remote side will be created <dest>/bar/temp1,
+<dest>/baz/temp2 hierarchies. If this option is nil full
+hierarchy will be created: <dest>/foo/{bar,baz}.")
+
 (defcustom dirvish-yank-keep-success-log nil
   "If t then keep logs of all completed yanks.
 By default only logs for yanks that finished with an error are
@@ -488,6 +496,17 @@ defaults to `dired-current-directory'."
   (interactive (dirvish-yank--read-dest 'hardlink))
   (dirvish-yank--apply 'dired-hardlink dest))
 
+(defun dirvish-yank--rsync-mark-common-prefix (srcs)
+  "Insert before common prefix of all `SRCS' ./.
+It will prevent creating common prefix hierarchy on the receiver side."
+  (let ((common-prefix (seq-reduce (lambda (s r)
+                                     (file-name-directory (fill-common-string-prefix s r)))
+                                   srcs
+                                   (car srcs))))
+    (mapcar (lambda (f)
+              (concat common-prefix "./" (string-remove-prefix common-prefix f)))
+            srcs)))
+
 ;;;###autoload
 (defun dirvish-rsync (dest)
   "Rsync marked files to DEST, prompt for DEST if not called with.
@@ -507,7 +526,11 @@ unexpected errors."
                    (dirvish-yank--get-srcs dirvish-yank-sources)
                    (user-error "Dirvish[error]: no marked files")))
          (src-0 (prog1 (car srcs) (dirvish-yank--extract-remote srcs)))
-         (svec (and (tramp-tramp-file-p src-0) (tramp-dissect-file-name src-0))))
+         (svec (and (tramp-tramp-file-p src-0) (tramp-dissect-file-name src-0)))
+         (srcs (if (and dirvish-yank-rsync-discard-prefix-when-relative
+                        (member "--relative" (dirvish-yank--rsync-args)))
+                   (dirvish-yank--rsync-mark-common-prefix srcs)
+                 srcs)))
     (cond
      ;; shost and dhost are different remote hosts
      ((and svec dvec (not (tramp-local-host-p svec))
