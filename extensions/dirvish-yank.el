@@ -166,6 +166,8 @@ ssh-agent Environment variables are propagated to emacs."
 (defvar-local dirvish-yank--ssh-r2r-receiver-port nil "Local value of r2r receiver port.")
 (defvar-local dirvish-yank--ssh-r2r-receiver-user nil "Local value of r2r receiver user.")
 
+(defvar detached-enabled)
+
 (defun dirvish-yank--get-remote-port ()
   "Return the remote port we shall use for the reverse port-forward."
   (+ 50000 (length dirvish-yank-log-buffers)))
@@ -756,7 +758,13 @@ values."
   ["Configure"
    ("C" "Set variables..."  dirvish-rsync-transient-configure)]
   ["Action"
-   [("RET" "Apply switches and copy" dirvish-yank--rsync-apply-switches-and-copy)]])
+   [("RET" "Apply switches and copy" dirvish-yank--rsync-apply-switches-and-copy)
+    ("M-RET" "Apply switches and run with detached"
+     (lambda () (interactive)
+       (let ((detached-enabled t))
+         (call-interactively #'dirvish-yank--rsync-apply-switches-and-copy)))
+     :if (lambda () (featurep 'detached)))]])
+
 
 (defvar crm-separator)
 
