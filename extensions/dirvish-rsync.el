@@ -97,6 +97,8 @@ The shortcut key is denoted by `dirvish-rsync-shortcut-key-for-yank-menu'."
 (defvar-local dirvish-rsync--r2r-ssh-recv-user nil
   "Local value of r2r receiver user.")
 
+(defvar detached-enabled)
+
 (defun dirvish-rsync--get-remote-host ()
   "Return the remote port we shall use for the reverse port-forward."
   (+ 50000 (length dirvish-yank-log-buffers)))
@@ -383,7 +385,12 @@ values."
   ["Configure"
    ("C" "Set variables..."  dirvish-rsync-transient-configure)]
   ["Action"
-   [("RET" "Apply switches and copy" dirvish-rsync--apply-switches-and-copy)]])
+   [("RET" "Apply switches and copy" dirvish-rsync--apply-switches-and-copy)
+    ("M-RET" "Apply switches and run with detached"
+     (lambda () (interactive)
+       (let ((detached-enabled t))
+         (call-interactively #'dirvish-rsync--apply-switches-and-copy)))
+     :if (lambda () (featurep 'detached)))]])
 
 (defun dirvish-rsync--transient-read-multiple
     (prompt &optional _initial-input _history)
