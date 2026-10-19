@@ -483,7 +483,7 @@ Press again to set the value for the group"))
             (list '("+" "  Press + to add a group"
                     (lambda () (interactive) (dirvish-emerge--ifx-add)))))]
        ["Actions:"
-        ("RET" "Apply current setup" (lambda () (interactive) (dirvish-emerge--ifx-apply)))
+        ("<return>" "Apply current setup" (lambda () (interactive) (dirvish-emerge--ifx-apply)))
         ("u" "  Unselect all groups"
          (lambda () (interactive) (dirvish-emerge--ifx-unselect)) :transient t)
         ("v" "  Toggle visibility of selected"

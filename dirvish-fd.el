@@ -156,7 +156,7 @@ Raise an error if fd executable is not available."
     ""
     "Actions"
     ("r" dirvish-fd--search-pattern-infix)
-    ("RET" "Rerun" dirvish-fd--apply-switches)]])
+    ("<return>" "Rerun" dirvish-fd--apply-switches)]])
 
 (defun dirvish-fd--argparser (re args)
   "Parse fd args to a list of flags from ARGS and search regexp RE."

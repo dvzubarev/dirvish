@@ -174,8 +174,8 @@ invoke the sort function, SWITCHES is the the sort flags for
     ("S" "Show the allocated size" "--size")
     ""
     "Actions"
-    ("RET" "  Apply to this buffer" dirvish-ls--apply-switches-to-buffer)
-    ("M-RET" "Apply to all Dired buffers" dirvish-ls--apply-switches-to-all)
+    ("<return>" "  Apply to this buffer" dirvish-ls--apply-switches-to-buffer)
+    ("M-<return>" "Apply to all Dired buffers" dirvish-ls--apply-switches-to-all)
     ("C-r" "  Reset this buffer" dirvish-ls--reset-switches-for-buffer)
     ("M-r" "  Reset all Dired buffers" dirvish-ls--reset-switches-for-all)
     ("C-l" "  Clear choices" dirvish-ls--clear-switches-choices :transient t)]])

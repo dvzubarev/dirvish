@@ -385,8 +385,8 @@ values."
   ["Configure"
    ("C" "Set variables..."  dirvish-rsync-transient-configure)]
   ["Action"
-   [("RET" "Apply switches and copy" dirvish-rsync--apply-switches-and-copy)
-    ("M-RET" "Apply switches and run with detached"
+   [("<return>" "Apply switches and copy" dirvish-rsync--apply-switches-and-copy)
+    ("M-<return>" "Apply switches and run with detached"
      (lambda () (interactive)
        (let ((detached-enabled t))
          (call-interactively #'dirvish-rsync--apply-switches-and-copy)))
